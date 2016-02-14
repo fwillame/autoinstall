@@ -34,12 +34,11 @@ autoinstall.iso: .autoinstall/preseed.txt .autoinstall/isolinux/isolinux.cfg
 	sed -i "s@{{username}}@$(USERNAME)@g" $@
 	sed -i "s@{{pwhash}}@$(PASSWORD)@g" $@
 
-
-PASSWORD ?= $(shell bash -c 'read -sp " please enter your preferred password  : " pwd; echo $$pwd | mkpasswd -s -m sha-512 ')
 HOSTNAME ?= $(shell bash -c 'read -ep " please enter your preferred hostname  : " -i "lg-nas" hostname; echo $$hostname ')
+DOMAIN   ?= $(shell bash -c 'read -ep " please enter your preferred domain    : " -i "local" domain  ; echo $$domain   ')
 FULLNAME ?= $(shell bash -c 'read -ep " please enter your preferred fullname  : " fullname; echo $$fullname ')
 USERNAME ?= $(shell bash -c 'read -ep " please enter your preferred username  : " -i "dalai" username; echo $$username ')
-DOMAIN   ?= $(shell bash -c 'read -ep " please enter your preferred domain    : " -i "local" domain  ; echo $$domain   ')
+PASSWORD ?= $(shell bash -c 'read -sp " please enter your preferred password  : " pwd; echo $$pwd | mkpasswd -s -m sha-512 ')
 
 ifeq ($(ARCH),i386)
 .autoinstall/isolinux/isolinux.cfg: isolinux.cfg.386 .autoinstall/md5sum.txt
@@ -62,5 +61,5 @@ endif
 $(INSTALLERBASEIMAGE):
 	$(CURL) $(CURLFLAGS) --output $@ $(URL)/$@
 
-clean-autoinstall:
+clean:
 	$(RM) -r .autoinstall autoinstall.iso $(INSTALLERBASEIMAGE)
